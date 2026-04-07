@@ -6,6 +6,15 @@
   <title>SC Conecta — Ativar e-SIM</title>
   <meta name="description" content="Ative seu e-SIM SC Conecta em segundos." />
 
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#6AAF1A" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="SC Conecta" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+
   <!-- QR Code library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -250,9 +259,36 @@
     .invalid-icon { font-size: 72px; margin-bottom: 20px; }
     .invalid-title { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px; }
     .invalid-sub { font-size: 15px; color: #555; text-align: center; line-height: 1.6; margin-bottom: 28px; }
+
+    /* PWA: remove bounce scroll no iOS, ocupa tela toda */
+    html, body { height: 100%; overflow-x: hidden; }
+    body { -webkit-overflow-scrolling: touch; }
+
+    /* Splash / loading inicial */
+    #splash {
+      position: fixed; inset: 0;
+      background: #6AAF1A;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.4s;
+    }
+    #splash.hide { opacity: 0; pointer-events: none; }
+    .splash-dot { width: 14px; height: 14px; border-radius: 50%; background: #fff; margin-bottom: 12px; }
+    .splash-name { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+    .splash-sub { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 4px; }
   </style>
 </head>
 <body>
+
+<!-- Splash screen -->
+<div id="splash">
+  <div class="splash-dot"></div>
+  <div class="splash-name">SC Conecta</div>
+  <div class="splash-sub">Ative seu e-SIM</div>
+</div>
 
 <header>
   <div>
@@ -359,6 +395,18 @@
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
   }
+
+  // Registra service worker para PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+
+  // Esconde splash após carregar
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('splash').classList.add('hide');
+    }, 800);
+  });
 
   // Inicializa
   const lpa = getLPA();
