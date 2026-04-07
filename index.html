@@ -362,6 +362,10 @@
       </div>
     </div>
 
+    <a id="playstore-btn" class="btn-primary" href="https://play.google.com/store/apps/details?id=com.simflow.app" style="margin-top:8px">
+      📲 Baixar app SC Conecta
+    </a>
+
     <div class="support-box">
       <div class="support-label">Precisa de ajuda?</div>
       <a class="support-link" href="https://wa.me/5519997633330">Falar com suporte via WhatsApp</a>
@@ -421,15 +425,25 @@
     // Redireciona automaticamente após 1.5s
     setTimeout(() => { window.location.href = appleLink; }, 1500);
   } else {
-    // Android: mostra QR Code + passo a passo
-    showScreen('screen-android');
-    new QRCode(document.getElementById('qrcode'), {
-      text: lpa,
-      width: 220,
-      height: 220,
-      colorDark: '#1a1a1a',
-      colorLight: '#ffffff',
-    });
+    // Android: copia LPA no clipboard para o app recuperar depois
+    // Tenta abrir o app via deep link
+    navigator.clipboard && navigator.clipboard.writeText(lpa).catch(() => {});
+
+    // Tenta abrir o app instalado
+    const appLink = `simflow://ativar?lpa=${encodeURIComponent(lpa)}`;
+    window.location.href = appLink;
+
+    // Se após 2s ainda estiver na página, o app não está instalado
+    setTimeout(() => {
+      showScreen('screen-android');
+      new QRCode(document.getElementById('qrcode'), {
+        text: lpa,
+        width: 220,
+        height: 220,
+        colorDark: '#1a1a1a',
+        colorLight: '#ffffff',
+      });
+    }, 2000);
   }
 </script>
 
