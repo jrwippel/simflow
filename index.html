@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SC Conecta — Ativar e-SIM</title>
+  <meta name="description" content="Ative seu e-SIM SC Conecta em segundos." />
+
+  <!-- QR Code library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #6AAF1A;
+    }
+    .logo-text {
+      font-size: 17px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: 0.3px;
+    }
+    .logo-sub {
+      font-size: 11px;
+      color: #999;
+      margin-left: 18px;
+      margin-top: 2px;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 20px 48px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #EEF7E0;
+      color: #4E8A0E;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .hero-card {
+      background: #EEF7E0;
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .hero-icon { font-size: 56px; margin-bottom: 16px; }
+    .hero-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+    .hero-subtitle {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .benefits {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .chip {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: #6AAF1A;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 12px;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+    .btn-primary:hover { background: #4E8A0E; }
+
+    .btn-secondary {
+      width: 100%;
+      background: transparent;
+      color: #6AAF1A;
+      border: 1.5px solid #6AAF1A;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .btn-secondary:hover { background: #EEF7E0; }
+
+    /* Toggle */
+    .toggle-row {
+      display: flex;
+      background: #efefef;
+      border-radius: 10px;
+      padding: 4px;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #999;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .toggle-btn.active {
+      background: #fff;
+      color: #6AAF1A;
+      font-weight: 700;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    /* QR */
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    .qr-label {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .qr-box {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e8e8e8;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+    .qr-hint {
+      font-size: 12px;
+      color: #aaa;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* Steps */
+    .steps {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #efefef;
+      padding: 20px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .step:last-child { margin-bottom: 0; }
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #6AAF1A;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-text { font-size: 14px; color: #555; line-height: 1.5; }
+    .step-text b { color: #6AAF1A; }
+
+    /* Support */
+    .support-box {
+      background: #f5f5f5;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .support-label { font-size: 13px; color: #aaa; margin-bottom: 4px; }
+    .support-link {
+      font-size: 14px;
+      color: #6AAF1A;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* Telas */
+    .screen { display: none; width: 100%; }
+    .screen.active { display: flex; flex-direction: column; align-items: center; }
+
+    .invalid-icon { font-size: 72px; margin-bottom: 20px; }
+    .invalid-title { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px; }
+    .invalid-sub { font-size: 15px; color: #555; text-align: center; line-height: 1.6; margin-bottom: 28px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="logo-dot"></div>
+      <span class="logo-text">SC Conecta</span>
+    </div>
+    <div class="logo-sub">Ative seu e-SIM</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- Tela: link inválido -->
+  <div class="screen" id="screen-invalid">
+    <div class="invalid-icon">⚠️</div>
+    <div class="invalid-title">Link inválido</div>
+    <p class="invalid-sub">O link que você acessou não contém um e-SIM válido.<br>Verifique o link recebido e tente novamente.</p>
+    <div class="support-box">
+      <div class="support-label">Precisa de ajuda?</div>
+      <a class="support-link" href="https://wa.me/5519997633330">Falar com suporte via WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- Tela: iPhone (redireciona automaticamente) -->
+  <div class="screen" id="screen-ios">
+    <div class="badge">🍎 iPhone detectado</div>
+    <div class="hero-card">
+      <div class="hero-icon">🌍</div>
+      <div class="hero-title">Seu e-SIM chegou!</div>
+      <p class="hero-subtitle">Toque no botão abaixo para instalar automaticamente no seu iPhone.</p>
+    </div>
+    <div class="benefits">
+      <span class="chip">✈️ 120+ países</span>
+      <span class="chip">📶 Alta velocidade</span>
+      <span class="chip">💬 Suporte 24h</span>
+    </div>
+    <a id="ios-link" class="btn-primary" href="#">Instalar e-SIM agora</a>
+    <div class="support-box">
+      <div class="support-label">Precisa de ajuda?</div>
+      <a class="support-link" href="https://wa.me/5519997633330">Falar com suporte via WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- Tela: Android -->
+  <div class="screen" id="screen-android">
+    <div class="badge">📱 Instalação manual</div>
+
+    <div class="toggle-row">
+      <button class="toggle-btn active" onclick="showTab('steps')">Passo a passo</button>
+      <button class="toggle-btn" onclick="showTab('qr')">QR Code</button>
+    </div>
+
+    <div id="tab-steps" style="width:100%">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">Abra as <b>Configurações</b> do celular</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Toque em <b>Rede e Internet</b> (ou SIMs)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Toque em <b>Adicionar SIM</b></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Escolha <b>Usar código QR</b></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-text">Escaneie o <b>QR Code</b> na aba ao lado</div></div>
+      </div>
+    </div>
+
+    <div id="tab-qr" style="width:100%;display:none">
+      <div class="qr-container">
+        <p class="qr-label">Escaneie nas configurações de e-SIM</p>
+        <div class="qr-box">
+          <div id="qrcode"></div>
+        </div>
+        <p class="qr-hint">Vá em Configurações → Rede → Adicionar SIM → Usar QR Code</p>
+      </div>
+    </div>
+
+    <div class="support-box">
+      <div class="support-label">Precisa de ajuda?</div>
+      <a class="support-link" href="https://wa.me/5519997633330">Falar com suporte via WhatsApp</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Lê o LPA da URL
+  function getLPA() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('lpa');
+  }
+
+  // Detecta iOS
+  function isIOS() {
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  // Alterna abas QR / Passo a passo
+  function showTab(tab) {
+    document.getElementById('tab-steps').style.display = tab === 'steps' ? 'block' : 'none';
+    document.getElementById('tab-qr').style.display = tab === 'qr' ? 'block' : 'none';
+    document.querySelectorAll('.toggle-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', (tab === 'steps' && i === 0) || (tab === 'qr' && i === 1));
+    });
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  // Inicializa
+  const lpa = getLPA();
+
+  if (!lpa) {
+    showScreen('screen-invalid');
+  } else if (isIOS()) {
+    // iPhone: monta link da Apple e redireciona automaticamente
+    const appleLink = `https://esimsetup.apple.com/esim_qrcode_provisioning?carddata=${encodeURIComponent(lpa)}`;
+    document.getElementById('ios-link').href = appleLink;
+    showScreen('screen-ios');
+    // Redireciona automaticamente após 1.5s
+    setTimeout(() => { window.location.href = appleLink; }, 1500);
+  } else {
+    // Android: mostra QR Code + passo a passo
+    showScreen('screen-android');
+    new QRCode(document.getElementById('qrcode'), {
+      text: lpa,
+      width: 220,
+      height: 220,
+      colorDark: '#1a1a1a',
+      colorLight: '#ffffff',
+    });
+  }
+</script>
+
+</body>
+</html>
