@@ -406,11 +406,7 @@
   }
 
   // Esconde splash após carregar
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('splash').classList.add('hide');
-    }, 800);
-  });
+  setTimeout(() => document.getElementById('splash').classList.add('hide'), 1000);
 
   // Inicializa
   const lpa = getLPA();
